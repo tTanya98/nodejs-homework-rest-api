@@ -1,52 +1,53 @@
 const { CtrlWrapper, HttpErrors } = require('../helpers/'); 
-const contactsMethods = require('../models/contacts'); 
-const getAll = async (req, res, next) => {
-  const list = await contactsMethods.listContacts(); 
-  res.json(list); 
+const contactsService = require('../models/contacts'); 
+
+const getAllContacts = async (req, res) => {
+  const result = await contactsService.listContacts(); 
+  res.json(result); 
 };
 
-const getById = async (req, res, next) => {
+const getContactById = async (req, res) => {
   const { contactId } = req.params;
 
-  const contact = await contactsMethods.getContactById(contactId); 
+  const result = await contactsService.getContactById(contactId); 
 
-  if (!contact) {
-    throw HttpErrors(404, 'Not found, man'); 
+  if (!result) {
+    throw HttpErrors(404, 'Not found'); 
   }
 
-  res.json(contact); 
+  res.json(result); 
 };
 
-const addContact = async (req, res, next) => {
-  const newContact = await contactsMethods.addContact(req.body); 
-  res.status(201).json(newContact);  
+const addContact = async (req, res) => {
+  const result = await contactsService.addContact(req.body); 
+  res.status(201).json(result);  
 };
 
-const deleteContact = async (req, res, next) => {
+const deleteContact = async (req, res) => {
   const { contactId } = req.params; 
 
-  const delContact = await contactsMethods.removeContact(contactId);
-  if (!delContact) {
+  const result = await contactsService.removeContact(contactId);
+  if (!result) {
     throw HttpErrors(404, 'Not found');
   }
 
-  res.json(delContact); 
+  res.json({ "message": "contact deleted" }); 
 };
 
-const updateContact = async (req, res, next) => {
+const updateContact = async (req, res) => {
   const { contactId } = req.params; 
 
-  const updContact = await contactsMethods.updateContact(contactId, req.body); 
-  if (!updContact) {
+  const result = await contactsService.updateContact(contactId, req.body); 
+  if (!result) {
     throw HttpErrors(404, 'Not found');
   }
 
-  res.json(updContact);
+  res.json(result);
 };
 
 module.exports = {
-  getAll: CtrlWrapper(getAll),
-  getById: CtrlWrapper(getById), 
+  getAllContacts: CtrlWrapper(getAllContacts),
+  getContactById: CtrlWrapper(getContactById), 
   addContact: CtrlWrapper(addContact), 
   deleteContact: CtrlWrapper(deleteContact), 
   updateContact: CtrlWrapper(updateContact), 
