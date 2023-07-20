@@ -1,4 +1,4 @@
-const { CtrlWrapper, HttpErrors } = require('../helpers/'); 
+const { CtrlWrapper, HttpErrors } = require('../helpers'); 
 const contactsService = require('../models/contacts'); 
 
 const getAllContacts = async (req, res) => {
@@ -38,6 +38,7 @@ const updateContact = async (req, res) => {
   const { contactId } = req.params; 
 
   const result = await contactsService.updateContact(contactId, req.body); 
+  
   if (!result) {
     throw HttpErrors(404, 'Not found');
   }

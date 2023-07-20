@@ -1,4 +1,4 @@
-const { HttpErrors } = require('../helpers');
+const { HttpErrors } = require('../helpers/');
 
 const validateBody = (contactSchema) => {
   const func = (req, res, next) => {
@@ -6,8 +6,8 @@ const validateBody = (contactSchema) => {
         const emptyField = !Object.keys(req.body).length;
          
         if (emptyField) {
-          throw HttpErrors(400, "missing fields")
-        }
+          throw RequestError(400, "missing fields")
+      }
         if (error) {
           throw (HttpErrors(400, error.message))
         }
