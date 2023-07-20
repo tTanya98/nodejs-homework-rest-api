@@ -6,7 +6,7 @@ const validateBody = (contactSchema) => {
         const emptyField = !Object.keys(req.body).length;
          
         if (emptyField) {
-          throw RequestError(400, "missing fields")
+          throw HttpErrors(400, "missing fields")
       }
         if (error) {
           throw (HttpErrors(400, error.message))
