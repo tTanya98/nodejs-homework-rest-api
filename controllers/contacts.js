@@ -1,15 +1,15 @@
 const { CtrlWrapper, HttpErrors } = require('../helpers'); 
-const contactsService = require('../models/contacts'); 
+const { contactsService } = require('../models/contacts'); 
 
 const getAllContacts = async (req, res) => {
-  const result = await contactsService.listContacts(); 
+  const result = await contactsService.find(); 
   res.json(result); 
 };
 
 const getContactById = async (req, res) => {
   const { contactId } = req.params;
 
-  const result = await contactsService.getContactById(contactId); 
+  const result = await contactsService.findById(contactId); 
 
   if (!result) {
     throw HttpErrors(404, 'Not found'); 
@@ -19,14 +19,14 @@ const getContactById = async (req, res) => {
 };
 
 const addContact = async (req, res) => {
-  const result = await contactsService.addContact(req.body); 
+  const result = await contactsService.create(req.body); 
   res.status(201).json(result);  
 };
 
 const deleteContact = async (req, res) => {
   const { contactId } = req.params; 
 
-  const result = await contactsService.removeContact(contactId);
+  const result = await contactsService.findByIdAndRemove(contactId);
   if (!result) {
     throw HttpErrors(404, 'Not found');
   }
@@ -37,7 +37,7 @@ const deleteContact = async (req, res) => {
 const updateContact = async (req, res) => {
   const { contactId } = req.params; 
 
-  const result = await contactsService.updateContact(contactId, req.body); 
+  const result = await contactsService.findByIdAndUpdate(contactId, req.body, {new:true}); 
   
   if (!result) {
     throw HttpErrors(404, 'Not found');
@@ -46,10 +46,21 @@ const updateContact = async (req, res) => {
   res.json(result);
 };
 
+const updateStatusContact = async (req, res) => {
+  const { contactId } = req.params;
+const result = await contactsService.findByIdAndUpdate(contactId, req.body, {new:true});
+if (!result) {
+ throw HttpErrors(404, "Not found");
+}
+res.status(200).json(result);
+
+}
+
 module.exports = {
   getAllContacts: CtrlWrapper(getAllContacts),
   getContactById: CtrlWrapper(getContactById), 
   addContact: CtrlWrapper(addContact), 
   deleteContact: CtrlWrapper(deleteContact), 
   updateContact: CtrlWrapper(updateContact), 
+  updateStatusContact: CtrlWrapper(updateStatusContact),
 };

@@ -1,67 +1,62 @@
-const fs = require('fs/promises');
-const path = require('path'); 
-const { nanoid } = require('nanoid'); 
-const contactsPath = path.join(__dirname, 'contacts.json'); 
+const Joi = require("joi");
+const { Schema, model } = require("mongoose");
 
-const updateContacts = async (contacts) => {
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2)); 
+const {handleMongooseError, handleUpdateValidate} = require("./hooks")
+
+const contactSchema = new Schema({
+  name: {
+    type: String,
+    required: [true, 'Set name for contact'],
+  },
+  email: {
+    type: String,
+  },
+  phone: {
+    type: String,
+  },
+  favorite: {
+    type: Boolean,
+    default: false,
+  },
+}, { versionKey: false, timestamps: true });
+
+
+contactSchema.pre("findOneAndUpdate", handleUpdateValidate);
+
+contactSchema.post("save", handleMongooseError);
+contactSchema.post("findOneAndUpdate", handleMongooseError);
+
+const contactAddSchema = Joi.object({
+     name: Joi.string().required().messages({
+        "any.required": `'name' is a required field `,
+        "string.empty": `'name' cannot be an empty field`,
+  }),
+    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().messages({
+            "any.required": `'email'is a required field`,
+            "string.empty": `The 'email' field must be a valid email address`,
+            "string.email": `'email' must be a valid email`,
+        }),
+    phone: Joi.string().required().messages({
+            "any.required": `'phone' is a required field`,
+            "string.empty": `The 'phone' field must be a valid phone number`,
+        }),
+    favorite: Joi.boolean(),
+})
+
+const updateFavoriteSchema = Joi.object({
+  favorite: Joi.boolean().required().messages({
+            "any.required": `missing field 'favorite'`,            
+        }),
+});
+
+const schemas = {
+  contactAddSchema,
+  updateFavoriteSchema,
 }
 
-const listContacts = async () => {
-  const contacts = await fs.readFile(contactsPath); 
-  return JSON.parse(contacts);
-};
-
-const getContactById = async(contactId) => {
-  const contacts = await listContacts(); 
-
-  const result = contacts.find(contact => contact.id === contactId); 
-
-  return result || null;
-}
-
-const removeContact = async(contactId) => {
-  const contacts = await listContacts(); 
-
-  const index = contacts.findIndex(item => item.id === contactId);
-  if (index === -1) {
-    return null; 
-  }
-
-  const [removeContact] = contacts.splice(index, 1);
-  updateContacts(contacts); 
-  return removeContact; 
-}
-
-const addContact = async (body) => {
-  const contacts = await listContacts(); 
-
-  const newContact = {
-    id: nanoid(),
-    ...body,
-  }
-
-  contacts.push(newContact);
-  updateContacts(contacts); 
-  return newContact; 
-};
-
-const updateContact = async (contactId, body) => {
-  const contacts = await listContacts();
-  const index = contacts.findIndex(({ id }) => id === contactId);
-  if (index === -1) {
-    return null;
-  }
-  const updContact = contacts[index];
-  contacts[index] = { ...updContact, ...body };
-  updateContacts(contacts);
-  return contacts[index];
-};
+const Contact = model("contact", contactSchema);
 
 module.exports = {
-  listContacts,
-  getContactById,
-  addContact,
-  removeContact,
-  updateContact,
-}
+  Contact,
+  schemas,
+} 
