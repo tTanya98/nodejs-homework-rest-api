@@ -54,9 +54,9 @@ const schemas = {
   updateFavoriteSchema,
 }
 
-const Contact = model("contact", contactSchema);
+const contactsService = model("contacts", contactSchema);
 
 module.exports = {
-  Contact,
+  contactsService,
   schemas,
 } 
