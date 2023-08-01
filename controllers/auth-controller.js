@@ -1,6 +1,6 @@
 const { User } = require('../models/user');
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 const { HttpErrors } = require("../helpers/index");
 const { CtrlWrapper } = require("../helpers/index");
 
@@ -36,7 +36,7 @@ const login = async (req, res) => {
     const payload = {
         _id: user._id
     };
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
     await User.findByIdAndUpdate(user._id, { token });
     res.json({
         token,

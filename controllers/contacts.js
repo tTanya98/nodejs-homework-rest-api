@@ -1,4 +1,4 @@
-const { CtrlWrapper, HttpErrors } = require('../helpers'); 
+const { CtrlWrapper, HttpErrors } = require('../helpers/index'); 
 const { contactsService } = require('../models/contacts'); 
 
 const getAllContacts = async (req, res) => {
@@ -24,7 +24,7 @@ const getContactById = async (req, res) => {
 
 const addContact = async (req, res) => {
   const {_id: owner} = req.user;
-  const result = await Contact.create({ ...req.body, owner });
+  const result = await contactsService.create({ ...req.body, owner });
   res.status(201).json(result);
 };
 
