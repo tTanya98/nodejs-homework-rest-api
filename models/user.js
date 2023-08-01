@@ -6,10 +6,6 @@ const { handleMongooseError, handleUpdateValidate } = require("./hooks");
 const emailRegexp = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
 const userSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-  },
     password: {
         type: String,
         minlength: 6,
