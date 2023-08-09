@@ -5,6 +5,8 @@ const { validateBody, isEmptyBody, authenticate, upload} = require("../../middle
 const authRouter = express.Router();
 
 authRouter.post('/register', isEmptyBody, validateBody(schemas.registerSchema), ctrl.register);
+authRouter.get('/verify/:verificationToken', ctrl.verify);
+authRouter.post('/verify',validateBody(schemas.userEmailSchema), ctrl.resendVerify);
 authRouter.post('/login', isEmptyBody, validateBody(schemas.loginSchema), ctrl.login);
 authRouter.get('/current', authenticate, ctrl.getCurrent);
 authRouter.post('/logout', authenticate, ctrl.logout);
