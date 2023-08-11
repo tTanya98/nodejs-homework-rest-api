@@ -5,5 +5,5 @@ const sendEmail = require("./SendEmail");
 module.exports = {
   HttpErrors, 
   CtrlWrapper,
-  sendEmail
+  sendEmail,
 };

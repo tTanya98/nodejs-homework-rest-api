@@ -10,7 +10,7 @@ authRouter.post('/verify',validateBody(schemas.userEmailSchema), ctrl.resendVeri
 authRouter.post('/login', isEmptyBody, validateBody(schemas.loginSchema), ctrl.login);
 authRouter.get('/current', authenticate, ctrl.getCurrent);
 authRouter.post('/logout', authenticate, ctrl.logout);
-authRouter.patch('/', authenticate, validateBody(schemas.updateSubscriptionSchema), ctrl. updateSubscriptionUser )
+authRouter.patch('/', authenticate, validateBody(schemas.updateSubscriptionSchema), ctrl.updateSubscriptionUser )
 authRouter.patch('/avatars', authenticate, upload.single("avatar"), ctrl.updateAvatar);
 
 module.exports = authRouter;
