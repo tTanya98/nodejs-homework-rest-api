@@ -1,5 +1,6 @@
-const { CtrlWrapper, HttpErrors } = require('../helpers/index'); 
 const { contactsService } = require('../models/contacts'); 
+const { CtrlWrapper } = require('../helpers/index'); 
+const { HttpErrors } = require('../helpers/index'); 
 
 const getAllContacts = async (req, res) => {
   const { _id: owner } = req.user;

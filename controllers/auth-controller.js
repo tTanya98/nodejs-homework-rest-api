@@ -1,14 +1,12 @@
 const { User } = require('../models/user');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { HttpErrors } = require("../helpers/index");
-const { CtrlWrapper } = require("../helpers/index");
-const { sendEmail } = require("../helpers/index");
 const gravatar = require("gravatar");
 const path = require('path');
 const fs = require("fs/promises");
 const Jimp = require('jimp');
 const { nanoid } = require("nanoid");
+const { HttpErrors, CtrlWrapper, sendEmail } = require("../helpers/index");
 
 const { SECRET_KEY, BASE_URL } = process.env;
 const  avatarsDir = path.join(__dirname, "../", "public", "avatars");
